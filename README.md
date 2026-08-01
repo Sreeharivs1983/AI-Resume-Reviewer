@@ -1,5 +1,7 @@
 # AI Resume Reviewer
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-blue?logo=streamlit)](https://ai-resume-reviewer-sreeharivs.streamlit.app/)
+
 AI Resume Reviewer is a simple Streamlit application that analyzes uploaded resumes and provides ATS-friendly feedback for a target job role using an LLM.
 
 ## Features
@@ -61,6 +63,10 @@ Then open the local URL shown in the terminal.
 ## Live Demo
 
 - https://ai-resume-reviewer-sreeharivs.streamlit.app/
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-blue?logo=streamlit)](https://ai-resume-reviewer-sreeharivs.streamlit.app/)
+
+Try the live app and download a PDF review: https://ai-resume-reviewer-sreeharivs.streamlit.app/
 
 ## Usage
 
