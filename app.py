@@ -1,5 +1,5 @@
 import streamlit as st
-from fpdf import FPDF, XPos, YPos
+from fpdf import FPDF
 from utils import extract_text_from_pdf, extract_text_from_docx
 from ai import review_resume
 
@@ -66,11 +66,13 @@ def build_download_report(review, job_role, filename):
 
 
 def build_pdf_report(review, job_role, filename):
-    pdf = FPDF()
+    pdf = FPDF(unit="mm", format="A4")
     pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.set_left_margin(15)
+    pdf.set_right_margin(15)
     pdf.add_page()
     pdf.set_font("Helvetica", size=12)
-    page_width = pdf.w - 2 * pdf.l_margin
+    page_width = pdf.w - pdf.l_margin - pdf.r_margin
 
     def pdf_text(text):
         if text is None:
@@ -84,46 +86,56 @@ def build_pdf_report(review, job_role, filename):
 
     def write_heading(text):
         pdf.set_font("Helvetica", style="B", size=12)
-        pdf.cell(page_width, 8, pdf_text(text), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.set_x(pdf.l_margin)
+        pdf.multi_cell(page_width, 8, pdf_text(text))
         pdf.set_font("Helvetica", size=12)
 
     write_heading("Resume Review Report")
-    pdf.cell(page_width, 8, pdf_text(f"Source file: {filename}"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(page_width, 8, pdf_text(f"Target role: {job_role}"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(page_width, 8, pdf_text(f"ATS Score: {review['resume_score']}/100"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(page_width, 8, pdf_text(f"Recommendation: {get_score_status(review['resume_score'])[0]}"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_x(pdf.l_margin)
+    pdf.multi_cell(page_width, 6, pdf_text(f"Source file: {filename}"), align="L")
+    pdf.set_x(pdf.l_margin)
+    pdf.multi_cell(page_width, 6, pdf_text(f"Target role: {job_role}"), align="L")
+    pdf.set_x(pdf.l_margin)
+    pdf.multi_cell(page_width, 6, pdf_text(f"ATS Score: {review['resume_score']}/100"), align="L")
+    pdf.set_x(pdf.l_margin)
+    pdf.multi_cell(page_width, 6, pdf_text(f"Recommendation: {get_score_status(review['resume_score'])[0]}"), align="L")
     pdf.ln(4)
 
     write_heading("Strengths")
     for item in review['strengths']:
-        pdf.multi_cell(page_width, 6, pdf_text(f"- {item}"))
+        pdf.set_x(pdf.l_margin)
+        pdf.multi_cell(page_width, 6, pdf_text(f"- {item}"), align="L")
     pdf.ln(2)
 
     write_heading("Opportunities")
     for item in review['weaknesses']:
-        pdf.multi_cell(page_width, 6, pdf_text(f"- {item}"))
+        pdf.set_x(pdf.l_margin)
+        pdf.multi_cell(page_width, 6, pdf_text(f"- {item}"), align="L")
     pdf.ln(2)
 
     write_heading("Recommended Skills")
     for item in review['missing_skills']:
-        pdf.multi_cell(page_width, 6, pdf_text(f"- {item}"))
+        pdf.set_x(pdf.l_margin)
+        pdf.multi_cell(page_width, 6, pdf_text(f"- {item}"), align="L")
     pdf.ln(2)
 
     write_heading("Improvement Plan")
     for idx, item in enumerate(review['improvement_suggestions'], start=1):
-        pdf.multi_cell(page_width, 6, pdf_text(f"{idx}. {item}"))
+        pdf.set_x(pdf.l_margin)
+        pdf.multi_cell(page_width, 6, pdf_text(f"{idx}. {item}"), align="L")
     pdf.ln(2)
 
     write_heading("Executive Summary")
-    pdf.multi_cell(page_width, 6, pdf_text(review['professional_summary']))
+    pdf.set_x(pdf.l_margin)
+    pdf.multi_cell(page_width, 6, pdf_text(review['professional_summary']), align="L")
     pdf.ln(2)
 
     write_heading("Final Verdict")
-    pdf.multi_cell(page_width, 6, pdf_text(review['final_verdict']))
+    pdf.set_x(pdf.l_margin)
+    pdf.multi_cell(page_width, 6, pdf_text(review['final_verdict']), align="L")
 
     pdf_output = pdf.output(dest="S")
     return bytes(pdf_output)
-
 # ===========================
 # Sidebar
 # ===========================
@@ -176,27 +188,22 @@ st.caption(
 
 st.divider()
 
-# Upload Resume
-st.subheader("📂 Upload Resume")
+with st.form("resume_review_form"):
+    st.subheader("📂 Upload Resume")
+    uploaded_file = st.file_uploader(
+        "Upload your Resume (PDF or DOCX)",
+        type=["pdf", "docx"]
+    )
 
-uploaded_file = st.file_uploader(
-    "Upload your Resume (PDF or DOCX)",
-    type=["pdf", "docx"]
-)
+    st.subheader("🎯 Target Job Role")
+    job_role = st.text_input(
+        "Enter the Target Job Role",
+        placeholder="Example: Python Developer"
+    )
 
-# Job Role
-st.subheader("🎯 Target Job Role")
+    submitted = st.form_submit_button("🚀 Analyze Resume")
 
-job_role = st.text_input(
-    "Enter the Target Job Role",
-    placeholder="Example: Python Developer"
-)
-
-# ===========================
-# Analyze Button
-# ===========================
-
-if st.button("🚀 Analyze Resume", use_container_width=True):
+if submitted:
 
     # Validation
     if uploaded_file is None:
