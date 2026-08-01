@@ -183,7 +183,7 @@ with st.sidebar:
 st.title("📄 AI Resume Reviewer")
 
 st.caption(
-    "Get AI-powered resume analysis, ATS suggestions, and skill recommendations using Llama."
+    "Get AI-powered resume analysis, ATS suggestions, and skill recommendations."
 )
 
 st.divider()
