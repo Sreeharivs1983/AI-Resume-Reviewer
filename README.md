@@ -64,6 +64,7 @@ Then open the local URL shown in the terminal.
 2. Enter the target job role (for example: `Python Developer`).
 3. Click **Analyze Resume**.
 4. Review the results provided by the app.
+5. Download the completed review as a PDF file.
 
 ## File Support
 
