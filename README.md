@@ -58,6 +58,10 @@ streamlit run app.py
 
 Then open the local URL shown in the terminal.
 
+## Live Demo
+
+- https://ai-resume-reviewer-sreeharivs.streamlit.app/
+
 ## Usage
 
 1. Upload a resume file in PDF or DOCX format.
