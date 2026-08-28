@@ -58,52 +58,8 @@ AI-Resume-Reviewer/
 ├── .gitignore
 └── README.md
 
-## Run Locally
-
-### Backend
-
-```bash
-python -m venv venv
-venv\Scripts\activate
-pip install -r backend/requirements.txt
-uvicorn backend.main:app --reload
 ```
 
-Backend:
-
-```text
-http://127.0.0.1:8000
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Frontend:
-
-```text
-http://localhost:5173
-```
-
-## Environment Variables
-
-Create:
-
-```text
-backend/.env
-```
-
-Add your AI API key:
-
-```env
-OPENAI_API_KEY=your_api_key_here
-```
-
-Never commit API keys or `.env` files to GitHub.
 
 ## How It Works
 
