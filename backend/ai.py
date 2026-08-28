@@ -1,10 +1,18 @@
 from groq import Groq
 from dotenv import load_dotenv
+from pathlib import Path
 import os
 import json
-import streamlit as st
 
-load_dotenv()
+
+# ===========================
+# Load .env from backend
+# ===========================
+
+BASE_DIR = Path(__file__).resolve().parent
+ENV_FILE = BASE_DIR / ".env"
+
+load_dotenv(ENV_FILE)
 
 
 # ===========================
@@ -12,22 +20,15 @@ load_dotenv()
 # ===========================
 
 def get_groq_api_key():
-    # Local development: .env
     api_key = os.getenv("GROQ_API_KEY")
 
     if api_key:
         return api_key
 
-    # Streamlit Cloud: Secrets
-    try:
-        secrets = st.secrets
-    except Exception:
-        return None
-
-    if isinstance(secrets, dict) and "GROQ_API_KEY" in secrets:
-        return secrets["GROQ_API_KEY"]
-
-    return None
+    raise RuntimeError(
+        "GROQ_API_KEY is not set. "
+        "Add it to backend/.env."
+    )
 
 
 # ===========================
@@ -44,13 +45,9 @@ def get_client():
 
         api_key = get_groq_api_key()
 
-        if not api_key:
-            raise RuntimeError(
-                "GROQ_API_KEY is not set. "
-                "Add it to your .env file or Streamlit Cloud secrets."
-            )
-
-        client = Groq(api_key=api_key)
+        client = Groq(
+            api_key=api_key
+        )
 
     return client
 
@@ -81,15 +78,17 @@ def parse_json_content(content):
 
     except json.JSONDecodeError:
 
-        # Fallback in case the model adds
-        # extra text around the JSON.
+        # Fallback in case the model
+        # returns extra text around JSON.
         start = content.find("{")
         end = content.rfind("}")
 
         if start != -1 and end != -1 and start < end:
 
             try:
-                return json.loads(content[start:end + 1])
+                return json.loads(
+                    content[start:end + 1]
+                )
 
             except json.JSONDecodeError:
                 pass
@@ -122,17 +121,21 @@ def validate_review_response(response):
         if expected_type is int:
 
             if isinstance(value, float) and value.is_integer():
+
                 response[key] = int(value)
 
             elif not isinstance(value, int):
+
                 raise ValueError(
                     f"Invalid type for '{key}'. "
-                    f"Expected integer, got {type(value).__name__}"
+                    f"Expected integer, "
+                    f"got {type(value).__name__}"
                 )
 
         else:
 
             if not isinstance(value, expected_type):
+
                 raise ValueError(
                     f"Invalid type for '{key}'. "
                     f"Expected {expected_type.__name__}, "
@@ -142,7 +145,11 @@ def validate_review_response(response):
         # Validate list contents
         if expected_type is list:
 
-            if any(not isinstance(item, str) for item in value):
+            if any(
+                not isinstance(item, str)
+                for item in value
+            ):
+
                 raise ValueError(
                     f"All items in '{key}' must be strings"
                 )
@@ -151,6 +158,7 @@ def validate_review_response(response):
     score = response["resume_score"]
 
     if score < 0 or score > 100:
+
         raise ValueError(
             "resume_score must be between 0 and 100"
         )
@@ -236,7 +244,7 @@ Rules:
 
             temperature=0.3,
 
-            # Ask the model to return valid JSON.
+            # Request JSON response
             response_format={
                 "type": "json_object"
             }
@@ -244,8 +252,6 @@ Rules:
 
     except Exception as exc:
 
-        # Keep the original error so debugging
-        # is easier during development/deployment.
         raise RuntimeError(
             f"Failed to call Groq API: {exc}"
         ) from exc
@@ -260,6 +266,7 @@ Rules:
         content = response.choices[0].message.content
 
         if not content:
+
             raise ValueError(
                 "Groq returned an empty response"
             )
@@ -277,7 +284,9 @@ Rules:
 
     try:
 
-        parsed_response = parse_json_content(content)
+        parsed_response = parse_json_content(
+            content
+        )
 
     except Exception as exc:
 
