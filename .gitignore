@@ -53,3 +53,8 @@ frontend/dist/
 
 .DS_Store
 Thumbs.db
+
+# Environment Variables
+.env
+backend/.env
+frontend/.env

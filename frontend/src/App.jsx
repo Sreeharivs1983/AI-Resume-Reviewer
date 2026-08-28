@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function App() {
   const [resume, setResume] = useState(null);
   const [jobRole, setJobRole] = useState("");
@@ -59,7 +61,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/analyze",
+  `${API_URL}/analyze`,
         {
           method: "POST",
           body: formData,
@@ -105,7 +107,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/report",
+  `${API_URL}/report`,
         {
           method: "POST",
           body: formData,
