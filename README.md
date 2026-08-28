@@ -1,44 +1,138 @@
 # AI Resume Reviewer
 
-AI Resume Reviewer is a full-stack Generative AI application that analyzes resumes against a target job role and provides ATS-focused feedback.
+An AI-powered resume analysis application that evaluates resumes against a target job role and provides ATS-focused feedback, skill-gap analysis, and improvement recommendations.
 
-## Features
+## 🚀 Live Demo
 
-- Upload PDF or DOCX resumes
+👉 https://ai-resume-reviewer-sreehari-vs.vercel.app
+
+## ✨ Features
+
+- Upload resumes in PDF or DOCX format
 - Enter a target job role
-- AI-powered ATS score
+- AI-powered ATS compatibility score
 - Resume strengths and weaknesses
-- Missing skill recommendations
-- Improvement suggestions
-- Professional summary and final verdict
-- Downloadable PDF report
-- Responsive React UI
+- Missing skills identification
+- Personalized improvement suggestions
+- Professional summary
+- Final assessment
+- Download analysis as a PDF report
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- React + Vite
-- FastAPI
+### Frontend
+- React
+- Vite
+- CSS
+
+### Backend
 - Python
-- GPT-OSS 120B
-- FPDF2
-- PDF/DOCX text extraction
-- REST API
+- FastAPI
+- Uvicorn
 
-## Project Structure
+### AI & Processing
+- Groq API
+- GPT-OSS
+- PDFPlumber
+- python-docx
+- FPDF2
+
+## 📁 Project Structure
 
 ```text
 AI-Resume-Reviewer/
+│
 ├── backend/
-│   ├── ai.py
 │   ├── main.py
+│   ├── ai.py
 │   ├── utils.py
-│   └── requirements.txt
+│   ├── requirements.txt
+│   └── .env
 │
 ├── frontend/
 │   ├── src/
 │   ├── public/
-│   └── package.json
+│   ├── package.json
+│   └── vite.config.js
 │
-├── tests/
 ├── .gitignore
 └── README.md
+
+## Run Locally
+
+### Backend
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+pip install -r backend/requirements.txt
+uvicorn backend.main:app --reload
+```
+
+Backend:
+
+```text
+http://127.0.0.1:8000
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend:
+
+```text
+http://localhost:5173
+```
+
+## Environment Variables
+
+Create:
+
+```text
+backend/.env
+```
+
+Add your AI API key:
+
+```env
+OPENAI_API_KEY=your_api_key_here
+```
+
+Never commit API keys or `.env` files to GitHub.
+
+## How It Works
+
+```text
+Resume + Target Role
+        ↓
+React Frontend
+        ↓
+FastAPI Backend
+        ↓
+Resume Text Extraction
+        ↓
+GPT-OSS 120B
+        ↓
+Structured AI Review
+        ↓
+ATS Score + Recommendations
+        ↓
+PDF Report
+```
+
+## Developer
+
+**Sreehari V S**
+
+LinkedIn: [https://www.linkedin.com/in/sreehari--vs](https://www.linkedin.com/in/sreehari--vs)
+
+GitHub: [https://github.com/Sreeharivs1983](https://github.com/Sreeharivs1983)
+
+## License
+
+This project is developed for educational and portfolio purposes.
