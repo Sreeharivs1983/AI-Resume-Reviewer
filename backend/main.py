@@ -9,8 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fpdf import FPDF
 
-from backend.ai import review_resume, validate_review_response
-from backend.utils import extract_text_from_pdf, extract_text_from_docx
+from ai import review_resume, validate_review_response
+from utils import extract_text_from_pdf, extract_text_from_docx
 
 
 # ===========================
