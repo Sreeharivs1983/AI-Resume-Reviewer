@@ -8,7 +8,7 @@ An AI-powered resume analysis application that evaluates resumes against a targe
 
 ## ✨ Features
 
- Upload resumes in PDF or DOCX format
+- Upload resumes in PDF or DOCX format
  Enter a target job role
  AI-powered ATS compatibility score
  Resume strengths and weaknesses
